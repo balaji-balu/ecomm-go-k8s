@@ -42,12 +42,12 @@ func init() {
     })
 
     // Setup MySQL shards
-    db1, err := sql.Open("mysql", "user:password@tcp(localhost:3306)/shard1")
+    db1, err := sql.Open("mysql", "user:mysql-root-password@tcp(localhost:3306)/shard1")
     if err != nil {
         log.Fatalf("Error opening database: %v", err)
     }
 
-    db2, err := sql.Open("mysql", "user:password@tcp(localhost:3307)/shard2")
+    db2, err := sql.Open("mysql", "user:mysql-root-password@tcp(localhost:3307)/shard2")
     if err != nil {
         log.Fatalf("Error opening database: %v", err)
     }
