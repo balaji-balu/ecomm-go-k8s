@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./src
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - db1
+      - db2
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  db1:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shard1
+    ports:
+      - "3306:3306"
+
+  db2:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shard2
+    ports:
+      - "3307:3307"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  loki:
+    image: grafana/loki:2.4.1
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki/loki-config.yaml:/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.4.1
+    volumes:
+      - /var/log:/var/log
+      - ./monitoring/promtail/promtail-config.yaml:/etc/promtail/config.yml

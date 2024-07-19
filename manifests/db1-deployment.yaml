@@ -1,0 +1,27 @@
+# db1-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db1
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db1
+  template:
+    metadata:
+      labels:
+        app: db1
+    spec:
+      containers:
+      - name: db1
+        image: mysql:8.0
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: mysql-root-password

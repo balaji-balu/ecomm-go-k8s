@@ -1,0 +1,27 @@
+# db2-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db2
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db2
+  template:
+    metadata:
+      labels:
+        app: db2
+    spec:
+      containers:
+      - name: db2
+        image: mysql:8.0
+        ports:
+        - containerPort: 3307
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: mysql-root-password
